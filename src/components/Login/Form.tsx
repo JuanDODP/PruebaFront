@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { Buttom } from '../ui/Buttom'
 import { Input } from '../ui/Input'
+import { delay } from '../../utils/delay'
 import { EMAIL_PATTERN } from '../../utils/validators'
 
 export interface LoginFormValues {
@@ -16,7 +17,7 @@ interface FormProps {
 const PASSWORD_MIN_LENGTH = 8
 
 // Simula la llamada al servidor: cualquier correo y contraseña válidos son aceptados
-const simulateLogin = () => new Promise<void>((resolve) => setTimeout(resolve, 1000))
+const simulateLogin = () => delay(1000)
 
 export const Form = ({ onSuccess }: FormProps) => {
   const {
