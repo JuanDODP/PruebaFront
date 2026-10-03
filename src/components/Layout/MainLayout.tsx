@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Box } from '@mui/material'
 import { Outlet, useLocation } from 'react-router'
 import { ErrorBoundary, PageLoader } from '@/components/ui'
+import { Footer } from './Footer'
 import { Header } from './Header'
 
 export const MainLayout = () => {
@@ -22,6 +23,7 @@ export const MainLayout = () => {
           </Suspense>
         </ErrorBoundary>
       </Box>
+      <Footer />
     </Box>
   )
 }
