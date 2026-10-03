@@ -2,6 +2,7 @@ export const AUTH_STORAGE_KEY = 'isAuthenticated'
 
 export interface State {
   isAuthenticated: boolean
+  
 }
 
 export type Action = { type: 'LOGIN' } | { type: 'LOGOUT' }
