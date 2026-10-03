@@ -1,5 +1,7 @@
 export * from './Button'
 export * from './EmptyState'
+export * from './ErrorBoundary'
+export * from './ErrorFallback'
 export * from './FormBuilder'
 export * from './Input'
 export * from './modal'

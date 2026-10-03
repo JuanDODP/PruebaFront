@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
 import { MainLayout } from '@/components/Layout'
 import { PageLoader } from '@/components/ui'
-import { navRoutes, publicRoutes } from '@/config'
+import { navRoutes, NotFoundPage, publicRoutes } from '@/config'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
 
@@ -21,8 +21,9 @@ export const AppRouter = () => {
           ))}
         </Route>
 
-        {/* Cualquier otra ruta (incluida "/") arranca en el login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* La raíz lleva al inicio; si no hay sesión, PrivateRoute redirige al login */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   )

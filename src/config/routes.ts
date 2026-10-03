@@ -18,6 +18,9 @@ const LoginPage = lazy(() => import('@/pages/LoginPage').then((module) => ({ def
 const HomePage = lazy(() => import('@/pages/HomePage').then((module) => ({ default: module.HomePage })))
 const ConsumoPage = lazy(() => import('@/pages/ConsumoPage').then((module) => ({ default: module.ConsumoPage })))
 
+// Fuera del arreglo: no es pública ni privada, responde a cualquier ruta desconocida
+export const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })))
+
 export const routes: AppRoute[] = [
   { id: 1, name: 'Login', path: '/login', Component: LoginPage, isPrivate: false },
   { id: 2, name: 'Home', path: '/home', Component: HomePage, isPrivate: true, icon: DashboardOutlined },
