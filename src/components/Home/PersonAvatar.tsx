@@ -1,6 +1,6 @@
 import { Avatar, type AvatarProps } from '@mui/material'
-import type { Person } from '../../types/person'
-import { getInitials } from '../../utils/person'
+import type { Person } from '@/types'
+import { getInitials } from '@/utils'
 
 type PersonAvatarProps = AvatarProps & {
   person: Pick<Person, 'firstName' | 'lastName'>

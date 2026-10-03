@@ -1,7 +1,6 @@
 import { Box, Paper, Typography } from '@mui/material'
-import type { Person } from '../../types/person'
-import { formatPhone } from '../../utils/format'
-import { getFullName } from '../../utils/person'
+import type { Person } from '@/types'
+import { formatPhone, getFullName } from '@/utils'
 import { PersonActions, type PersonActionHandlers } from './PersonActions'
 import { PersonAvatar } from './PersonAvatar'
 

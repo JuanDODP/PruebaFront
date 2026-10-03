@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
-import { FormBuilder } from '../ui/FormBuilder'
-import { Modal } from '../../utils/modal/Modal'
-import type { Person, PersonFormValues } from '../../types/person'
+import { FormBuilder, Modal } from '@/components/ui'
+import type { Person, PersonFormValues } from '@/types'
 import { buildPersonFields } from './personFormFields'
 
 interface PersonFormModalProps {
@@ -9,7 +8,8 @@ interface PersonFormModalProps {
   // Si viene una persona el formulario está en modo edición; si no, en modo alta
   person: Person | null
   isEmailTaken: (email: string, excludeId?: string) => boolean
-  onSubmit: (values: PersonFormValues) => void
+  // Puede ser asíncrono: el botón muestra carga hasta que la promesa termine
+  onSubmit: (values: PersonFormValues) => void | Promise<void>
   onClose: () => void
 }
 

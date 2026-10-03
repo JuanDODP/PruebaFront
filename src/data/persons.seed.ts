@@ -1,4 +1,4 @@
-import type { Person } from '../types/person'
+import type { Person } from '@/types'
 
 const SEED_DATE = '2026-01-15T10:00:00.000Z'
 

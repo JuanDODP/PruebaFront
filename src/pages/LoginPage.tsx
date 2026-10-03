@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Box, Paper, Typography } from '@mui/material'
-import { Form } from '../components/Login/Form'
-import { useStateContext } from '../contexts/State.Context'
-import { ModalAlert } from '../utils/modal/ModalAlert'
+import { LoginForm } from '@/components/Login'
+import { ModalAlert } from '@/components/ui'
+import { useAuth } from '@/contexts'
 
 export const LoginPage = () => {
-  const { dispatch } = useStateContext()
+  const { login } = useAuth()
   const [showSuccess, setShowSuccess] = useState(false)
 
   return (
@@ -36,7 +36,7 @@ export const LoginPage = () => {
         >
           Iniciar sesión
         </Typography>
-        <Form onSuccess={() => setShowSuccess(true)} />
+        <LoginForm onSuccess={() => setShowSuccess(true)} />
       </Paper>
 
       <ModalAlert
@@ -46,7 +46,7 @@ export const LoginPage = () => {
         message="¡Bienvenido de nuevo!"
         buttonLabel="Continuar"
         // Al autenticar, PublicRoute redirige automáticamente a /home
-        onClose={() => dispatch({ type: 'LOGIN' })}
+        onClose={login}
       />
     </Box>
   )

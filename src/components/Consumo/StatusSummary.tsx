@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { Box, Stack, Typography } from '@mui/material'
-import type { Result, Status } from '@/interface/ApiData.Interface'
+import type { Character, CharacterStatus } from '@/types'
 import { STATUS_META } from './characterMeta'
 
 // Resumen rápido de cuántos personajes hay por estado
-export const StatusSummary = ({ characters }: { characters: Result[] }) => {
+export const StatusSummary = ({ characters }: { characters: Character[] }) => {
   const counts = useMemo(
     () =>
-      characters.reduce<Record<Status, number>>(
+      characters.reduce<Record<CharacterStatus, number>>(
         (acc, { status }) => ({ ...acc, [status]: acc[status] + 1 }),
         { Alive: 0, Dead: 0, unknown: 0 },
       ),
@@ -16,7 +16,7 @@ export const StatusSummary = ({ characters }: { characters: Result[] }) => {
 
   return (
     <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
-      {(Object.keys(STATUS_META) as Status[]).map((status) => (
+      {(Object.keys(STATUS_META) as CharacterStatus[]).map((status) => (
         <Box
           key={status}
           sx={{

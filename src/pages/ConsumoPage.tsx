@@ -3,14 +3,10 @@ import { Box, Stack, Typography } from '@mui/material'
 import CloudOffOutlined from '@mui/icons-material/CloudOffOutlined'
 import RefreshRounded from '@mui/icons-material/RefreshRounded'
 import SearchOffRounded from '@mui/icons-material/SearchOffRounded'
-import { Card } from '@/components/Consumo/Card'
-import { CardSkeleton } from '@/components/Consumo/CardSkeleton'
-import { StatusSummary } from '@/components/Consumo/StatusSummary'
-import { PageHeader } from '@/components/Layout/PageHeader'
-import { Buttom } from '@/components/ui/Buttom'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { PaginationControls } from '@/components/ui/PaginationControls'
-import { useApiData } from '@/contexts/api/Data.Context'
+import { CharacterCard, CharacterCardSkeleton, StatusSummary } from '@/components/Consumo'
+import { PageHeader } from '@/components/Layout'
+import { Button, EmptyState, PaginationControls } from '@/components/ui'
+import { useCharacters } from '@/contexts'
 
 const SKELETON_COUNT = 8
 // La API siempre devuelve 20 personajes por página
@@ -29,13 +25,15 @@ const CardGrid = ({ children }: { children: ReactNode }) => (
 )
 
 export const ConsumoPage = () => {
-  const { characters, info, isLoading, error, getData } = useApiData()
+  const { characters, info, isLoading, error, fetchCharacters } = useCharacters()
   const [page, setPage] = useState(1)
 
-  // Cada cambio de página vuelve a consultar la API con el nuevo número
+  // Cada cambio de página vuelve a consultar la API; la limpieza cancela la petición anterior
   useEffect(() => {
-    void getData(page)
-  }, [getData, page])
+    const controller = new AbortController()
+    void fetchCharacters(page, controller.signal)
+    return () => controller.abort()
+  }, [fetchCharacters, page])
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
@@ -50,18 +48,18 @@ export const ConsumoPage = () => {
       return (
         <CardGrid>
           {Array.from({ length: SKELETON_COUNT }, (_, index) => (
-            <CardSkeleton key={index} />
+            <CharacterCardSkeleton key={index} />
           ))}
         </CardGrid>
       )
     }
-    if (error && characters.length === 0) {
+    if (error) {
       return (
         <EmptyState
           icon={CloudOffOutlined}
           title="No pudimos cargar los personajes"
           description={error}
-          action={<Buttom label="Reintentar" startIcon={<RefreshRounded />} onClick={() => void getData(page)} />}
+          action={<Button label="Reintentar" startIcon={<RefreshRounded />} onClick={() => void fetchCharacters(page)} />}
         />
       )
     }
@@ -71,7 +69,7 @@ export const ConsumoPage = () => {
     return (
       <CardGrid>
         {characters.map((character, index) => (
-          <Card key={character.id} character={character} index={index} />
+          <CharacterCard key={character.id} character={character} index={index} />
         ))}
       </CardGrid>
     )
@@ -81,7 +79,7 @@ export const ConsumoPage = () => {
     <>
       <PageHeader title="Personajes" subtitle="Información obtenida desde la API de Rick and Morty." />
 
-      {!isLoading && characters.length > 0 && (
+      {!isLoading && !error && characters.length > 0 && (
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           spacing={1.5}

@@ -12,10 +12,12 @@ export const readStorage = <T>(key: string, fallback: () => T, isValid: (value: 
   return fallback()
 }
 
-export const writeStorage = (key: string, value: unknown) => {
+// Devuelve `false` si no se pudo guardar (storage lleno o no disponible)
+export const writeStorage = (key: string, value: unknown): boolean => {
   try {
     localStorage.setItem(key, JSON.stringify(value))
+    return true
   } catch {
-    // Storage lleno o no disponible
+    return false
   }
 }

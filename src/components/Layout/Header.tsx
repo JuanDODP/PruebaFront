@@ -17,8 +17,8 @@ import {
 import CloseRounded from '@mui/icons-material/CloseRounded'
 import LogoutRounded from '@mui/icons-material/LogoutRounded'
 import MenuRounded from '@mui/icons-material/MenuRounded'
-import { useStateContext } from '../../contexts/State.Context'
-import { navRoutes } from '../../routes/routes'
+import { navRoutes } from '@/config'
+import { useAuth } from '@/contexts'
 
 const Brand = () => (
   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -44,10 +44,8 @@ const Brand = () => (
 )
 
 export const Header = () => {
-  const { dispatch } = useStateContext()
+  const { logout } = useAuth()
   const [open, setOpen] = useState(false)
-
-  const logout = () => dispatch({ type: 'LOGOUT' })
 
   return (
     <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'primary.main', borderBottom: 1, borderColor: 'primary.dark' }}>

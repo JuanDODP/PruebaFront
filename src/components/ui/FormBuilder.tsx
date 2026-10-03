@@ -8,7 +8,7 @@ import {
   type RegisterOptions,
   type SubmitHandler,
 } from 'react-hook-form'
-import { Buttom } from './Buttom'
+import { Button } from './Button'
 import { Input } from './Input'
 
 export interface FormFieldConfig<T extends FieldValues> {
@@ -74,9 +74,9 @@ export const FormBuilder = <T extends FieldValues>({
 
       <Stack direction={{ xs: 'column-reverse', sm: 'row' }} spacing={1.5} sx={{ justifyContent: 'flex-end', mt: 4 }}>
         {onCancel && (
-          <Buttom label={cancelLabel} variant="outlined" color="inherit" onClick={onCancel} disabled={isSubmitting} />
+          <Button label={cancelLabel} variant="outlined" color="inherit" onClick={onCancel} disabled={isSubmitting} />
         )}
-        <Buttom
+        <Button
           label={submitLabel}
           type="submit"
           loading={isSubmitting}

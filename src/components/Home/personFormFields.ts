@@ -1,6 +1,5 @@
-import type { FormFieldConfig } from '../ui/FormBuilder'
-import type { PersonFormValues } from '../../types/person'
-import { onlyDigits } from '../../utils/format'
+import type { FormFieldConfig } from '@/components/ui'
+import type { PersonFormValues } from '@/types'
 import {
   EMAIL_PATTERN,
   NAME_MAX_LENGTH,
@@ -8,7 +7,8 @@ import {
   PHONE_LENGTH,
   PHONE_PATTERN,
   notBlank,
-} from '../../utils/validators'
+  onlyDigits,
+} from '@/utils'
 
 const nameRules = (label: string) => ({
   required: `${label} es obligatorio`,

@@ -1,4 +1,4 @@
-import type { Person, PersonFormValues } from '../types/person'
+import type { Person, PersonFormValues } from '@/types'
 import { normalizeText } from './format'
 
 export const getFullName = ({ firstName, lastName }: Pick<Person, 'firstName' | 'lastName'>) =>

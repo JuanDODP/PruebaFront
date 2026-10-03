@@ -1,10 +1,10 @@
 import { Box } from '@mui/material'
-import type { Status } from '@/interface/ApiData.Interface'
-import { pulseRing, REDUCED_MOTION } from '@/theme/motion'
+import type { CharacterStatus } from '@/types'
+import { pulseRing, REDUCED_MOTION } from '@/theme'
 import { STATUS_META } from './characterMeta'
 
 // Insignia translúcida que se coloca sobre la imagen del personaje
-export const StatusBadge = ({ status }: { status: Status }) => {
+export const StatusBadge = ({ status }: { status: CharacterStatus }) => {
   const { label, color } = STATUS_META[status]
 
   return (

@@ -1,0 +1,64 @@
+import { Stack } from '@mui/material'
+import { useForm } from 'react-hook-form'
+import { Button, Input } from '@/components/ui'
+import { delay, EMAIL_PATTERN } from '@/utils'
+
+export interface LoginFormValues {
+  email: string
+  password: string
+}
+
+interface LoginFormProps {
+  onSuccess: (data: LoginFormValues) => void
+}
+
+const PASSWORD_MIN_LENGTH = 8
+
+// Simula la llamada al servidor: cualquier correo y contraseña válidos son aceptados
+const simulateLogin = () => delay(1000)
+
+export const LoginForm = ({ onSuccess }: LoginFormProps) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<LoginFormValues>({
+    defaultValues: { email: '', password: '' },
+  })
+
+  const onSubmit = async (data: LoginFormValues) => {
+    await simulateLogin()
+    onSuccess(data)
+  }
+
+  return (
+    <Stack component="form" spacing={{ xs: 2, sm: 2.5 }} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <Input
+        name="email"
+        control={control}
+        label="Correo electrónico"
+        type="email"
+        autoComplete="email"
+        rules={{
+          required: 'El correo es obligatorio',
+          pattern: { value: EMAIL_PATTERN, message: 'Ingresa un correo válido (ej. usuario@dominio.com)' },
+        }}
+      />
+      <Input
+        name="password"
+        control={control}
+        label="Contraseña"
+        type="password"
+        autoComplete="current-password"
+        rules={{
+          required: 'La contraseña es obligatoria',
+          minLength: {
+            value: PASSWORD_MIN_LENGTH,
+            message: `La contraseña debe tener al menos ${PASSWORD_MIN_LENGTH} caracteres`,
+          },
+        }}
+      />
+      <Button label="Iniciar sesión" type="submit" size="large" loading={isSubmitting} fullWidth />
+    </Stack>
+  )
+}

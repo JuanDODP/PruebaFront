@@ -3,7 +3,7 @@ import FemaleRounded from '@mui/icons-material/FemaleRounded'
 import HelpOutlineRounded from '@mui/icons-material/HelpOutlineRounded'
 import MaleRounded from '@mui/icons-material/MaleRounded'
 import RadioButtonUncheckedRounded from '@mui/icons-material/RadioButtonUncheckedRounded'
-import type { Gender, Status } from '@/interface/ApiData.Interface'
+import type { CharacterGender, CharacterStatus } from '@/types'
 
 interface StatusMeta {
   label: string
@@ -12,13 +12,13 @@ interface StatusMeta {
 }
 
 // Traducción y color de cada estado; un solo lugar para mantener la presentación consistente
-export const STATUS_META: Record<Status, StatusMeta> = {
+export const STATUS_META: Record<CharacterStatus, StatusMeta> = {
   Alive: { label: 'Vivo', color: 'success.main' },
   Dead: { label: 'Muerto', color: 'error.main' },
   unknown: { label: 'Desconocido', color: 'grey.500' },
 }
 
-export const GENDER_META: Record<Gender, { label: string; icon: SvgIconComponent }> = {
+export const GENDER_META: Record<CharacterGender, { label: string; icon: SvgIconComponent }> = {
   Female: { label: 'Femenino', icon: FemaleRounded },
   Male: { label: 'Masculino', icon: MaleRounded },
   Genderless: { label: 'Sin género', icon: RadioButtonUncheckedRounded },

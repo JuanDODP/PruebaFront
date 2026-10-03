@@ -4,8 +4,8 @@ import DeleteOutlineRounded from '@mui/icons-material/DeleteOutlineRounded'
 import EditOutlined from '@mui/icons-material/EditOutlined'
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined'
 import type { SvgIconComponent } from '@mui/icons-material'
-import type { Person } from '../../types/person'
-import { getFullName } from '../../utils/person'
+import type { Person } from '@/types'
+import { getFullName } from '@/utils'
 
 export interface PersonActionHandlers {
   onView: (person: Person) => void

@@ -1,5 +1,5 @@
 import { Alert, Snackbar } from '@mui/material'
-import type { NotificationState } from '../../hooks/useNotification'
+import type { NotificationState } from '@/hooks'
 
 interface NotificationProps extends NotificationState {
   onClose: () => void

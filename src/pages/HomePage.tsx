@@ -1,22 +1,16 @@
 import { useDeferredValue, useMemo, useState } from 'react'
 import { Paper, Stack, Typography } from '@mui/material'
+import CloudOffOutlined from '@mui/icons-material/CloudOffOutlined'
 import GroupOutlined from '@mui/icons-material/GroupOutlined'
 import PersonAddAlt1Rounded from '@mui/icons-material/PersonAddAlt1Rounded'
+import RefreshRounded from '@mui/icons-material/RefreshRounded'
 import SearchOffRounded from '@mui/icons-material/SearchOffRounded'
-import { ModalView } from '../components/Home/ModalView'
-import { PersonFormModal } from '../components/Home/PersonFormModal'
-import { Search } from '../components/Home/Search'
-import { PersonTable } from '../components/Home/Table'
-import { PageHeader } from '../components/Layout/PageHeader'
-import { Buttom } from '../components/ui/Buttom'
-import { EmptyState } from '../components/ui/EmptyState'
-import { Notification } from '../components/ui/Notification'
-import { useNotification } from '../hooks/useNotification'
-import { usePersons } from '../hooks/usePersons'
-import type { Person, PersonFormValues } from '../types/person'
-import { pluralize } from '../utils/format'
-import { filterPersons, getFullName } from '../utils/person'
-import { ModalConfirm } from '../utils/modal/ModalConfirm'
+import { PersonDetailModal, PersonFormModal, PersonTable, PersonTableSkeleton } from '@/components/Home'
+import { PageHeader } from '@/components/Layout'
+import { Button, EmptyState, ModalConfirm, Notification, SearchInput } from '@/components/ui'
+import { useNotification, usePersons } from '@/hooks'
+import type { Person, PersonFormValues } from '@/types'
+import { filterPersons, getErrorMessage, getFullName, pluralize } from '@/utils'
 
 type DialogMode = 'form' | 'view' | 'delete'
 
@@ -27,34 +21,49 @@ interface DialogState {
 }
 
 export const HomePage = () => {
-  const { persons, addPerson, updatePerson, deletePerson, isEmailTaken } = usePersons()
+  const { persons, isLoading, error, reload, addPerson, updatePerson, deletePerson, isEmailTaken } = usePersons()
   const { notification, notify, closeNotification } = useNotification()
   const [query, setQuery] = useState('')
   const [dialog, setDialog] = useState<DialogState>({ mode: null, person: null })
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // La búsqueda filtra con baja prioridad para que escribir siempre se sienta fluido
   const deferredQuery = useDeferredValue(query)
   const filteredPersons = useMemo(() => filterPersons(persons, deferredQuery), [persons, deferredQuery])
 
+  const isReady = !isLoading && !error
+
   const openDialog = (mode: DialogMode, person: Person | null = null) => setDialog({ mode, person })
   const closeDialog = () => setDialog((prev) => ({ ...prev, mode: null }))
 
-  const handleSubmit = (values: PersonFormValues) => {
-    if (dialog.person) {
-      updatePerson(dialog.person.id, values)
-      notify('Los datos de la persona se actualizaron correctamente')
-    } else {
-      addPerson(values)
-      notify('Persona registrada correctamente')
+  // Si el servicio falla el modal sigue abierto con los datos capturados para reintentar
+  const handleSubmit = async (values: PersonFormValues) => {
+    try {
+      if (dialog.person) {
+        await updatePerson(dialog.person.id, values)
+        notify('Los datos de la persona se actualizaron correctamente')
+      } else {
+        await addPerson(values)
+        notify('Persona registrada correctamente')
+      }
+      closeDialog()
+    } catch (err) {
+      notify(getErrorMessage(err), 'error')
     }
-    closeDialog()
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!dialog.person) return
-    deletePerson(dialog.person.id)
-    notify(`${getFullName(dialog.person)} fue eliminado(a) del registro`)
-    closeDialog()
+    setIsDeleting(true)
+    try {
+      await deletePerson(dialog.person.id)
+      notify(`${getFullName(dialog.person)} fue eliminado(a) del registro`)
+      closeDialog()
+    } catch (err) {
+      notify(getErrorMessage(err), 'error')
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   const actionHandlers = {
@@ -64,15 +73,34 @@ export const HomePage = () => {
   }
 
   const createButton = (
-    <Buttom
+    <Button
       label="Nueva persona"
       startIcon={<PersonAddAlt1Rounded />}
       onClick={() => openDialog('form')}
+      disabled={!isReady}
       sx={{ width: { xs: '100%', sm: 'auto' } }}
     />
   )
 
+  const getResultsLabel = () => {
+    if (isLoading) return 'Cargando personas…'
+    if (error) return ''
+    if (deferredQuery) return `${filteredPersons.length} de ${pluralize(persons.length, 'persona', 'personas')}`
+    return pluralize(persons.length, 'persona registrada', 'personas registradas')
+  }
+
   const renderContent = () => {
+    if (isLoading) return <PersonTableSkeleton />
+    if (error) {
+      return (
+        <EmptyState
+          icon={CloudOffOutlined}
+          title="No pudimos cargar las personas"
+          description={error}
+          action={<Button label="Reintentar" startIcon={<RefreshRounded />} onClick={() => void reload()} />}
+        />
+      )
+    }
     if (persons.length === 0) {
       return (
         <EmptyState
@@ -89,7 +117,7 @@ export const HomePage = () => {
           icon={SearchOffRounded}
           title="Sin resultados"
           description={`No encontramos personas que coincidan con "${deferredQuery}". Intenta con otro nombre o correo.`}
-          action={<Buttom label="Limpiar búsqueda" variant="outlined" onClick={() => setQuery('')} />}
+          action={<Button label="Limpiar búsqueda" variant="outlined" onClick={() => setQuery('')} />}
         />
       )
     }
@@ -112,15 +140,13 @@ export const HomePage = () => {
             borderColor: 'divider',
           }}
         >
-          <Search value={query} onChange={setQuery} placeholder="Buscar por nombre o correo" label="Buscar personas" />
+          <SearchInput value={query} onChange={setQuery} placeholder="Buscar por nombre o correo" label="Buscar personas" />
           <Typography variant="body2" color="text.secondary" aria-live="polite">
-            {deferredQuery
-              ? `${filteredPersons.length} de ${pluralize(persons.length, 'persona', 'personas')}`
-              : pluralize(persons.length, 'persona registrada', 'personas registradas')}
+            {getResultsLabel()}
           </Typography>
         </Stack>
 
-        {renderContent()}
+        <div aria-busy={isLoading}>{renderContent()}</div>
       </Paper>
 
       <PersonFormModal
@@ -131,7 +157,7 @@ export const HomePage = () => {
         onClose={closeDialog}
       />
 
-      <ModalView
+      <PersonDetailModal
         open={dialog.mode === 'view'}
         person={dialog.person}
         onEdit={actionHandlers.onEdit}
@@ -149,7 +175,8 @@ export const HomePage = () => {
           )
         }
         confirmLabel="Eliminar"
-        onConfirm={handleDelete}
+        loading={isDeleting}
+        onConfirm={() => void handleDelete()}
         onCancel={closeDialog}
       />
 
