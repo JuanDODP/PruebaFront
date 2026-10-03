@@ -1,7 +1,8 @@
 import { Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { Buttom } from './Buttom'
-import { Input } from './Input'
+import { Buttom } from '../ui/Buttom'
+import { Input } from '../ui/Input'
+import { EMAIL_PATTERN } from '../../utils/validators'
 
 export interface LoginFormValues {
   email: string
@@ -12,7 +13,6 @@ interface FormProps {
   onSuccess: (data: LoginFormValues) => void
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/
 const PASSWORD_MIN_LENGTH = 8
 
 // Simula la llamada al servidor: cualquier correo y contraseña válidos son aceptados

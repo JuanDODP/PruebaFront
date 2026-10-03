@@ -1,7 +1,7 @@
 import { Box, Dialog, DialogActions, DialogContent, Typography } from '@mui/material'
 import CheckRounded from '@mui/icons-material/CheckRounded'
 import CloseRounded from '@mui/icons-material/CloseRounded'
-import { Buttom } from '../../components/Login/Buttom'
+import { Buttom } from '../../components/ui/Buttom'
 
 export type AlertType = 'success' | 'error'
 
