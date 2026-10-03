@@ -1,5 +1,8 @@
 import type { ComponentType } from 'react';
-import { HomePage, LoginPage } from '../pages/iindex';
+import type { SvgIconComponent } from '@mui/icons-material';
+import DashboardOutlined from '@mui/icons-material/DashboardOutlined';
+import InsightsOutlined from '@mui/icons-material/InsightsOutlined';
+import { ConsumoPage, HomePage, LoginPage } from '../pages/iindex';
 
 interface Routes {
   id: number;
@@ -7,6 +10,7 @@ interface Routes {
   path: string;
   Component: ComponentType;
   isPrivate: boolean;
+  icon?: SvgIconComponent;
 }
 
 export const routes: Routes[] = [
@@ -22,6 +26,18 @@ export const routes: Routes[] = [
         name: "Home",
         path: "/home",
         Component: HomePage,
-        isPrivate: true
+        isPrivate: true,
+        icon: DashboardOutlined
+    },
+    {
+        id: 3,
+        name: "Consumo",
+        path: "/consumo",
+        Component: ConsumoPage,
+        isPrivate: true,
+        icon: InsightsOutlined
     }
 ];
+
+// Rutas que aparecen en el menú del header
+export const navRoutes = routes.filter(({ isPrivate }) => isPrivate);

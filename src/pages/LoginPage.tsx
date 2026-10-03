@@ -16,7 +16,7 @@ export const LoginPage = () => {
         placeItems: 'center',
         px: { xs: 2, sm: 3 },
         py: { xs: 3, sm: 4 },
-        bgcolor: { xs: 'background.paper', sm: 'grey.100' },
+        bgcolor: { xs: 'background.paper', sm: 'background.default' },
       }}
     >
       <Paper

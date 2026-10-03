@@ -1,4 +1,6 @@
 import { Box, Dialog, DialogActions, DialogContent, Typography } from '@mui/material'
+import CheckRounded from '@mui/icons-material/CheckRounded'
+import CloseRounded from '@mui/icons-material/CloseRounded'
 import { Buttom } from '../../components/Login/Buttom'
 
 export type AlertType = 'success' | 'error'
@@ -12,12 +14,14 @@ interface ModalAlertProps {
   onClose: () => void
 }
 
-const ICONS: Record<AlertType, string> = {
-  success: '✓',
-  error: '✕',
+const ICONS = {
+  success: CheckRounded,
+  error: CloseRounded,
 }
 
 export const ModalAlert = ({ open, type, title, message, buttonLabel = 'Aceptar', onClose }: ModalAlertProps) => {
+  const Icon = ICONS[type]
+
   return (
     <Dialog
       open={open}
@@ -41,7 +45,7 @@ export const ModalAlert = ({ open, type, title, message, buttonLabel = 'Aceptar'
             bgcolor: `${type}.main`,
           }}
         >
-          {ICONS[type]}
+          <Icon fontSize="inherit" />
         </Box>
         <Typography variant="h6" color={`${type}.main`} gutterBottom>
           {title}
